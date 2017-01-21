@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.glease.net/owe/xsd/resource_1.0.xsd"
+           targetNamespace="http://www.glease.net/owe/xsd/resource_1.0.xsd"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+	<xs:element name="resources">
+		<xs:annotation>
+			<xs:documentation>The root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:element ref="default"/>
+				<xs:element ref="resource" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="in" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="AccessDescriptorType">
+		<xs:annotation>
+			<xs:documentation>The type of a access exception list. Key-value pair with colon as k-v seperator and semi-colon as pair seperator. The key is mod name and the value should be true(alias 1) or false(alias 0).</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([A-Za-z0-9]+/[A-Za-z0-9]+:(allow|deny|1|0))(;([A-Za-z0-9]+/[A-Za-z0-9]+:(allow|deny|1|0)))*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="in">
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:choice>
+					<xs:element ref="resource"/>
+					<xs:element ref="in"/>
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute ref="loc"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="resource">
+		<xs:complexType>
+			<xs:attribute ref="loc" use="required"/>
+			<xs:attributeGroup ref="resourceAttributes"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="default">
+		<xs:annotation>
+			<xs:documentation>The default descriptor for all resources in this archive.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attributeGroup ref="resourceAttributes"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attribute name="loc">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="[A-Za-z0-9]+(/[A-Za-z0-9]+)*"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:attribute>
+	<xs:attributeGroup name="resourceAttributes">
+		<xs:attribute name="replaceable" type="xs:boolean" use="required">
+			<xs:annotation>
+				<xs:documentation>Whether this resource is replaceable by a third-party resource pack.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="access" type="AccessDescriptorType" use="optional">
+			<xs:annotation>
+				<xs:documentation>The access exception list.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="accessDefault" use="optional" default="3">
+			<xs:annotation>
+				<xs:documentation>The default access modifier. 2 bit integer. The higher bit means the access default for mods from the same author. The lower bit means the access default for other mods. 1 means allow read, 0 means no access allowed. Default to 11.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedByte">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:attributeGroup>
+</xs:schema>
