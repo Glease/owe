@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://owe.glease.net/xsd/resource_1.0.xsd"
-           targetNamespace="http://owe.glease.net/xsd/resource_1.0.xsd"
-           elementFormDefault="qualified"
-           attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://owe.glease.net/xsd/resource_1.0.xsd" targetNamespace="http://owe.glease.net/xsd/resource_1.0.xsd" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:element name="resources">
 		<xs:annotation>
-			<xs:documentation>The root element</xs:documentation>
+			<xs:documentation>The root element, also contains the default descriptor for all resources.</xs:documentation>
 		</xs:annotation>
 		<xs:complexType mixed="true">
 			<xs:sequence>
-				<xs:element ref="default"/>
 				<xs:element ref="resource" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element ref="in" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
+			<xs:attributeGroup ref="resourceAttributes"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:simpleType name="AccessDescriptorType">
@@ -38,14 +34,6 @@
 	<xs:element name="resource">
 		<xs:complexType>
 			<xs:attribute ref="loc" use="required"/>
-			<xs:attributeGroup ref="resourceAttributes"/>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="default">
-		<xs:annotation>
-			<xs:documentation>The default descriptor for all resources in this archive.</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
 			<xs:attributeGroup ref="resourceAttributes"/>
 		</xs:complexType>
 	</xs:element>
